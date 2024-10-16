@@ -3,7 +3,7 @@ import { Client, ID, Databases, Storage, Query} from "appwrite"
 
 
 export class Service{
-    Client = new Client()
+    client = new Client()
     databases;
     storage;
 
@@ -107,6 +107,7 @@ export class Service{
                 conf.appwriteBucketId,
                 fileId
             )
+            return true
         } catch (error) {
             console.log("appWrite service:: create post:: error", error);
                 return false

@@ -15,6 +15,8 @@ import Signup from "./components/Signup.jsx";
 import Login from "./components/Login.jsx";
 import ItemDetailPage from "./components/ItemDetailPage.jsx";
 import Dashboard from "./components/Dashboard.jsx";
+import { Provider } from "react-redux";
+import store from "./store/store.js";
 
 //  M 1
 // const router = createBrowserRouter([
@@ -56,6 +58,8 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         {/* <App /> */}
+        <Provider store={store}>
         <RouterProvider router={router} />
+        </Provider>
     </React.StrictMode>
 );

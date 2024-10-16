@@ -9,56 +9,82 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
+import { login as storeLogin } from "../store/authSlice";
+import authService from "../appwrite/auth";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import Input from "./Input";
 
 const USER_REGEX = /[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PSWD_REGEX = /^(?=.*[a-z])(?=.*[A-z])(?=.*[0-9])(?=.*[!@$#]).{8,24}$/;
 
 const Login = () => {
-    const userRef = useRef();
-    const errRef = useRef();
+    // const userRef = useRef();
+    // const errRef = useRef();
 
-    const [user, setUser] = useState("");
-    const [validName, setValidName] = useState(false);
-    const [userFocus, setUserFocus] = useState(false);
+    // const [user, setUser] = useState("");
+    // const [validName, setValidName] = useState(false);
+    // const [userFocus, setUserFocus] = useState(false);
 
-    const [email, setEmail] = useState("");
-    const [validEmail, setValidEmail] = useState(false);
-    const [emailFocus, setEmailFocus] = useState(false);
+    // const [email, setEmail] = useState("");
+    // const [validEmail, setValidEmail] = useState(false);
+    // const [emailFocus, setEmailFocus] = useState(false);
 
-    const [pwd, setPwd] = useState("");
-    const [validPwd, setValidPwd] = useState(false);
-    const [pwdFocus, setPwdFocus] = useState(false);
+    // const [pwd, setPwd] = useState("");
+    // const [validPwd, setValidPwd] = useState(false);
+    // const [pwdFocus, setPwdFocus] = useState(false);
 
-    const [matchPwd, setMatchPwd] = useState("");
-    const [validMatch, setValidMatch] = useState(false);
-    const [matchFocus, setMatchFocus] = useState(false);
+    // const [matchPwd, setMatchPwd] = useState("");
+    // const [validMatch, setValidMatch] = useState(false);
+    // const [matchFocus, setMatchFocus] = useState(false);
+
+    // const [errMsg, setErrMsg] = useState("");
+    // const [success, setSuccess] = useState(false);
+
+    // useEffect(() => {
+    //     // userRef.current.focus()
+    // }, []);
+
+    // useEffect(() => {
+    //     const result = USER_REGEX.test(user);
+    //     console.log(result);
+    //     console.log(user);
+    //     setValidName(result);
+    // }, [user]);
+
+    // useEffect(() => {
+    //     const result = PSWD_REGEX.test(pwd);
+    //     console.log(result);
+    //     console.log(pwd);
+    //     setValidPwd(result);
+    //     const match = pwd === matchPwd;
+    //     setValidMatch(match);
+    // }, [pwd, matchPwd]);
+
+    // useEffect(() => {
+    //     setErrMsg("");
+    // }, [user, pwd, matchPwd]);
 
     const [errMsg, setErrMsg] = useState("");
-    const [success, setSuccess] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { register, handleSubmit } = useForm();
 
-    useEffect(() => {
-        // userRef.current.focus()
-    }, []);
-
-    useEffect(() => {
-        const result = USER_REGEX.test(user);
-        console.log(result);
-        console.log(user);
-        setValidName(result);
-    }, [user]);
-
-    useEffect(() => {
-        const result = PSWD_REGEX.test(pwd);
-        console.log(result);
-        console.log(pwd);
-        setValidPwd(result);
-        const match = pwd === matchPwd;
-        setValidMatch(match);
-    }, [pwd, matchPwd]);
-
-    useEffect(() => {
+    const login = async (data) => {
         setErrMsg("");
-    }, [user, pwd, matchPwd]);
+        try {
+            const session = await authService.login(data);
+            if (session) {
+                const userData = await authService.getCurrentUser();
+                if (userData) dispatch(storeLogin(userData));
+                navigate("/");
+            }
+        } catch (error) {
+            console.log(error);
+            setErrMsg(error.message || "This is error msg");
+        }
+    };
 
     return (
         <>
@@ -79,9 +105,12 @@ const Login = () => {
                             <strong>Login</strong>
                         </h1>
                     </div>
-                    {errMsg ? <p ref={errRef}>{errMsg}</p> : <div></div>}
-                    <form className="flex flex-col gap-4 ">
-                        <div className="flex flex-col">
+                    {/* {errMsg && <p ref={errRef}>{errMsg}</p> } */}
+                    <form
+                        onSubmit={handleSubmit(login)}
+                        className="flex flex-col gap-4 "
+                    >
+                        {/* <div className="flex flex-col">
                             <label htmlFor="email" className="text-xs ">
                                 Email
                             </label>
@@ -96,10 +125,20 @@ const Login = () => {
                                 aria-describedby="emailnote"
                                 onFocus={() => setEmailFocus(true)}
                                 onBlur={() => setEmailFocus(false)}
+                                {...register("email",{})}
                             />
-                        </div>
+                        </div> */}
+                        <Input
+                            label={`Email `}
+                            type="text"
+                            placeholder="Enter your email"
+                            className="p-1 flex flex-col"
+                            {...register("email", {
+                                required: true,
+                            })}
+                        />
 
-                        <div className="flex flex-col">
+                        {/* <div className="flex flex-col">
                             <label htmlFor="Password" className="text-xs ">
                                 <strong>Password</strong>
 
@@ -142,19 +181,30 @@ const Login = () => {
                                     <span aria-label="doller sign">$</span>
                                 </p>
                             )}
-                        </div>
+                        </div> */}
+
+                        <Input
+                            label="Password"
+                            type="password"
+                            placeholder="Enter Password"
+                            className="flex flex-col"
+                            {...register("password", {
+                                required: true,
+                            })}
+                        />
 
                         <span className="text-[12px]">Forgot Password?</span>
 
                         <button
-                            type="button"
+                            // type="button"
+                            type="submit"
                             className={classNames(
                                 "px-2 py-1 text-sm text-white border-solid rounded-lg border-1 bg-blue-600"
                             )}
                             // disabled={ !validPwd ? true : false}
-                            onClick={() => {
-                                toLogin();
-                            }}
+                            // onClick={() => {
+                            //     toLogin();
+                            // }}
                         >
                             LOGIN
                         </button>

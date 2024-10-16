@@ -1,16 +1,18 @@
 import React from "react";
 import Image from "../assets/watch.jpg";
 import { NavLink } from "react-router-dom";
+import service from "../appwrite/config";
 
 const Amount = 100;
 
-function Card() {
+function Card({$id, featuredImg}) {
     return (
         <span>
             <NavLink to="/ItemDetailPage" className="">
                 <div className="w-[190px] h-[300px] bg-purple-400  flex flex-col  relative  rounded-xl overflow-hidden ">
                     <img
                         src={Image}
+                        // src={service.getFilePreview(featuredImg)}
                         alt="Product-image"
                         className="absolute top-0  w-[190px] h-[190px] object-cover rounded "
                     />

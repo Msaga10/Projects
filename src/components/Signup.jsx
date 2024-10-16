@@ -8,7 +8,12 @@ import {
     faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import Input from "./Input";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import authService from "../appwrite/auth";
+import { login } from "../store/authSlice";
 
 const USER_REGEX = /[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PSWD_REGEX = /^(?=.*[a-z])(?=.*[A-z])(?=.*[0-9])(?=.*[!@$#]).{8,24}$/;
@@ -60,17 +65,36 @@ const Signup = () => {
         setErrMsg("");
     }, [user, pwd, matchPwd]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // if button enabled with js hack
-        const v1 = USER_REGEX.test(user);
-        const v2 = PSWD_REGEX.test(pwd);
-        if (!v1 || !v2) {
-            setErrMsg("Invalid entry!!");
-            return;
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     // if button enabled with js hack
+    //     const v1 = USER_REGEX.test(user);
+    //     const v2 = PSWD_REGEX.test(pwd);
+    //     if (!v1 || !v2) {
+    //         setErrMsg("Invalid entry!!");
+    //         return;
+    //     }
+    //     console.log(user, pwd);
+    //     setSuccess(true);
+    // };
+
+    // const [errMsg, setErrMsg] = useState("")
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { register, handleSubmit } = useForm();
+
+    const create = async (data) => {
+        setErrMsg("");
+        try {
+            const userData = await authService.createAccount(data);
+            if (userData) {
+                const userData = await authService.getCurrentUser();
+                if (userData) dispatch(login(userData));
+                navigate("/");
+            }
+        } catch (error) {
+            setErrMsg(error.message);
         }
-        console.log(user, pwd);
-        setSuccess(true);
     };
 
     return (
@@ -104,15 +128,11 @@ const Signup = () => {
                             </div>
 
                             <form
-                                onSubmit={handleSubmit}
+                                onSubmit={handleSubmit(create)}
                                 className="flex flex-col gap-4 "
                             >
-                                <>
                                     <div className="flex flex-col">
-                                        <label
-                                            htmlFor="userName"
-                                            className="flex gap-2 text-xs"
-                                        >
+                                    <label className="flex gap-2 text-xs">
                                             <strong>User Name</strong>
                                             {validName && (
                                                 <span>
@@ -130,7 +150,7 @@ const Signup = () => {
                                                 </span>
                                             )}
                                         </label>
-                                        <input
+                                    {/* <input
                                             type="text"
                                             id="userName"
                                             placeholder="Enter Name"
@@ -145,6 +165,15 @@ const Signup = () => {
                                             onFocus={() => setUserFocus(true)}
                                             onBlur={() => setUserFocus(false)}
                                             className="p-1 text-black rounded focus:outline-none"
+                                        /> */}
+                                    <Input
+                                        // label="name"
+                                        type="text"
+                                        placeholder="Enter Name"
+                                        className="p-1 text-black rounded focus:outline-none"
+                                        {...register("name", {
+                                            required: true,
+                                        })}
                                         />
                                     </div>
                                     {userFocus && user && !validName && (
@@ -152,22 +181,19 @@ const Signup = () => {
                                             id="udinote"
                                             className="gap-1 p-1 text-[12px] bg-black rounded"
                                         >
-                                            <FontAwesomeIcon
-                                                icon={faInfoCircle}
-                                            />
+                                        <FontAwesomeIcon icon={faInfoCircle} />
                                             4-24 characters. <br />
                                             Must begin with a letter. <br />
-                                            Letters, numbers, underscore,
-                                            hyphens allowed.
+                                        Letters, numbers, underscore, hyphens
+                                        allowed.
                                         </p>
                                     )}
-                                </>
 
                                 <div className="flex flex-col">
-                                    <label htmlFor="email" className="text-xs ">
-                                        Email
+                                    <label className="text-xs ">
+                                        <strong>Email</strong>
                                     </label>
-                                    <input
+                                    {/* <input
                                         type="text"
                                         id="email"
                                         placeholder="Enter Email"
@@ -182,14 +208,19 @@ const Signup = () => {
                                         aria-describedby="emailnote"
                                         onFocus={() => setEmailFocus(true)}
                                         onBlur={() => setEmailFocus(false)}
+                                    /> */}
+                                    <Input
+                                    type="text"
+                                    placeholder="Enter Email"
+                                    className="p-1 text-black rounded focus:outline-none"
+                                    {...register("email",{
+                                        required:true
+                                    })}
                                     />
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <label
-                                        htmlFor="Password"
-                                        className="text-xs "
-                                    >
+                                    <label className="text-xs ">
                                         <strong>Password</strong>
 
                                         {validPwd && (
@@ -207,7 +238,7 @@ const Signup = () => {
                                             </span>
                                         )}
                                     </label>
-                                    <input
+                                    {/* <input
                                         type="password"
                                         id="password"
                                         placeholder="Password"
@@ -220,6 +251,14 @@ const Signup = () => {
                                         aria-describedby="pwdnote"
                                         onFocus={() => setPwdFocus(true)}
                                         onBlur={() => setPwdFocus(false)}
+                                    /> */}
+                                    <Input
+                                    type="password"
+                                    placeholder="Enter Password"
+                                    className="p-1 text-black rounded focus:outline-none"
+                                    {...register("password",{
+                                        required:true
+                                    })}
                                     />
 
                                     {pwdFocus && !validPwd && (
@@ -250,10 +289,7 @@ const Signup = () => {
                                 </div>
 
                                 <div className="flex flex-col">
-                                    <label
-                                        htmlFor="confirm_pwd"
-                                        className="text-xs "
-                                    >
+                                    <label className="text-xs ">
                                         <strong>Confirm Password</strong>{" "}
                                         {validMatch && matchPwd && (
                                             <span>
@@ -270,7 +306,7 @@ const Signup = () => {
                                             </span>
                                         )}
                                     </label>
-                                    <input
+                                    {/* <input
                                         type="password"
                                         id="confirm_pwd"
                                         placeholder="Confirm Password"
@@ -285,7 +321,15 @@ const Signup = () => {
                                         aria-describedby="confirmnote"
                                         onFocus={() => setMatchFocus(true)}
                                         onBlur={() => setMatchFocus(false)}
-                                    />
+                                    /> */}
+            {/* <Input
+            type="password"
+            placeholder="Confirm Password"
+            className="p-1 text-black rounded focus:outline-none"
+            {...register("confirmPwd",{
+                required:true
+            })}
+            /> */}
                                     {matchFocus && !validMatch && (
                                         <p
                                             id="confirmnote"
@@ -301,6 +345,7 @@ const Signup = () => {
                                 </div>
 
                                 <button
+                                    type="submit"
                                     className={classNames(
                                         "px-2 py-1 text-sm text-white border-solid rounded-lg border-1 ",
                                         {
@@ -315,11 +360,11 @@ const Signup = () => {
                                                 !validMatch,
                                         }
                                     )}
-                                    disabled={
-                                        !email || !validPwd || !validMatch
-                                            ? true
-                                            : false
-                                    }
+                                    // disabled={
+                                    //     !email || !validPwd || !validMatch
+                                    //         ? true
+                                    //         : false
+                                    // }
                                 >
                                     CREATE ACCOUNT
                                 </button>
@@ -335,6 +380,17 @@ const Signup = () => {
                 </section>
             )}
         </>
+
+        // <>
+        //     <div
+        //         className="grid h-screen gap-2 bg-center bg-cover "
+        //         style={{ backgroundImage: `url(${bg1})` }}
+        //     >
+        //          <div className="p-4 w-[300px] h-[350px]  border-solid border-1 rounded-lg bg-teal-700/70 border-gray-600 grid h-fit items-center justify-center justify-self-center self-center relative drop-shadow-2xl backdrop-blur-sm">
+        //             <Input/>
+        //          </div>
+        //     </div>
+        // </>
     );
 };
 

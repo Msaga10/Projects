@@ -16,19 +16,23 @@ export class AuthService{
     async createAccount({email,password,name}){
         try {
             const userAccount = await this.account.create(ID.unique(),email,password,name)
+            console.log(email,name,password);
+            console.log(userAccount);
+            
             if (userAccount) {
                 return this.login({email,password})
             }else{
                 return userAccount
             }
         } catch (error) {
+            console.error("Error creating account:", error)
             throw error
         }
     }
 
     async login({email,password}){
         try {
-            return await this.account.createEmailSession(email,password)
+            return await this.account.createEmailPasswordSession(email,password)
         } catch (error) {
             throw error
         }
