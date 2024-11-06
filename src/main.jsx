@@ -17,6 +17,7 @@ import ItemDetailPage from "./components/ItemDetailPage.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
+import MakeBid from "./components/MakeBid.jsx";
 
 //  M 1
 // const router = createBrowserRouter([
@@ -46,11 +47,12 @@ const router = createBrowserRouter(
         <>
             <Route path="/" element={<Layout />}>
                 <Route path="" element={<HomePage />} />
-                <Route path="/ItemDetailPage" element={<ItemDetailPage />} />
+                <Route path="/ItemDetailPage/:LotId" element={<ItemDetailPage />} />
                 <Route path="/Dashboard" element={<Dashboard/>}/>
             </Route>
             <Route path="/Signup" element={<Signup />} />
             <Route path="/Login" element={<Login />} />
+            <Route path="/MakeBid" element={<MakeBid />} />
         </>
     )
 );

@@ -5,10 +5,14 @@ import Footer from "./Footer";
 import { useDispatch } from "react-redux";
 import authService from "../appwrite/auth";
 import { login,logout } from "../store/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Layout() {
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const authStatus = useSelector((state)=>state.auth.status)
 
     useEffect(()=>{
         authService.getCurrentUser()
@@ -17,10 +21,11 @@ function Layout() {
                 dispatch(login({userData}))
             }else{
                 dispatch(logout())
+                navigate("/")
             }
         })
         .finally(()=>setLoading(false))
-    },[])
+    },[authStatus])
 
     return !loading ? (
         <div>

@@ -11,7 +11,7 @@ function Hero() {
             </div>
             <div className="flex w-full gap-4 p-4 bg-primary-blue">
                 <Card />
-                <Card />
+                {/* <Card /> */}
             </div>
         </div>
     );

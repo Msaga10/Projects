@@ -28,15 +28,15 @@ function Header() {
             </NavLink>
 
             {!authStatus && (
-            <span className="px-2 bg-gray-500 rounded-full ">
+            <span className="px-2 py-[3px] h-min my-auto bg-gray-500 rounded-full ">
                 <NavLink
-                    to="/Signup"
+                    to="/Login"
                     className={({ isActive }) =>
                             `${isActive ? "hidden" : ""}  `
                     }
                 >
                     {" "}
-                    <p className=""> Sign Up</p>
+                    <p className=""> Login</p>
                 </NavLink>
             </span>
             )}

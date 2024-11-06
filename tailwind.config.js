@@ -7,7 +7,9 @@ export default {
   theme: {
     extend: {
 
-
+      backgroundImage: {
+        'radial-gradient': 'radial-gradient(circle, #f87171, #3b82f6)',
+      },
 
       fontFamily: {
         roboto: ['roboto', 'sans-serif'],
