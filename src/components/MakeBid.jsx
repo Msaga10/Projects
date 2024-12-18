@@ -5,42 +5,68 @@ import db_service from "../appwrite/dbConfig";
 import { useDispatch } from "react-redux";
 import { addBid } from "../store/bidSlice";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 function MakeBid({isOpen, onClose}){
 
     const {register, handleSubmit} = useForm()
+    const [bidData, setBidData] = useState(null)
     const userData = useSelector((state)=>state.auth.userData)
     const {LotId} = useParams()
     
     const dispatch = useDispatch()
-    
-    // const lastBidId = useSelector((state)=>state.bids.lastBidId)
 
     const submitBid = async (data) => {
-        console.log(userData);
-        console.log(LotId);
+        // console.log(userData);
+        // console.log(LotId);
+        
         data.lot_id = LotId
-        const id9 = userData.$id
-        const time  = Date.now()
-        console.log(time);
         if (data.bid_amount) {
             data.bid_amount = parseInt(data.bid_amount, 10);
         }
-        console.log(data.bid_amount);
         
+        try {
+            const response = await db_service.getBids("lot_id", LotId);
+            if (response.documents && response.documents.length > 0) {
+                const lastBid = response.documents[response.documents.length - 1];  
+                setBidData(lastBid);
+            } else {
+                setBidData(null);  
+            }
+        } catch (error) {
+            console.error('Error fetching bid data:', error);
+        }
+        setTimeout(()=>{
+            console.log(bidData);
+        },4000)
+        let response
+        if(bidData.bid_amount < data.bid_amount){
+            const id9 = userData.$id
+        const time  = Date.now()
+        // console.log(time);
+        // console.log(data.bid_amount);
+        
+        const abc = await db_service.getBids("lot_id",LotId)
+        let lastBidId = null
+        if (abc.documents && abc.documents.length > 0) {
+            const lastBid = abc.documents[abc.documents.length - 1];
+            lastBidId = lastBid.$id
+        }
         
         data.bid_time = new Date(time).toISOString()
         data.user_id = id9
         data.status = "pending"
-        // data.lot_id = lot_Id 
-        // data.lastBidId = lastBidId || null
-        const response = await db_service.createBid(data)
-        // const bid_id = response.$id
+        data.previous_bid_id = lastBidId || null
+        response = await db_service.createBid(data)
         dispatch(addBid(response))
-        console.log(response);
-        onClose()
-        return response
+        }else{
+            alert("Amount should be greater then last bid!")
+        }
+
         
+        // console.log(response);
+        onClose()
+        return response   
     }
 
 

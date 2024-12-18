@@ -128,7 +128,10 @@ function Card({ $id, featuredImg }) {
                             </div>
                             <div className="absolute bottom-0 right-0 px-1 text-lg bg-blue-500 rounded m-1">
                                 {/* 15Hr 5Min Left */}
-                                <Timer duration={singleData("start_date")[index]}/>
+                                <Timer 
+                                    startDate={singleData("start_date")[index]}
+                                    endDate={singleData("end_date")[index]}
+                                />
                             </div>
                         </div>
                     </div>

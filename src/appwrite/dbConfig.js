@@ -151,6 +151,42 @@ export class dbService{
         }
     }
 
+
+    ///////////////// User Details ////////////////////
+
+    async userDetails(user_id,name,email,password_hash,status){
+        try{
+            return await this.databases.createDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionIdofUsers,
+                ID.unique(),
+                {
+                    user_id,
+                    name,
+                    email,
+                    password_hash,
+                    status
+                }
+            )
+        } catch (error){
+            console.log('appwrite :: userDetails :: error ::', error)
+        }
+    }
+
+    async getUserDetails(attribute,user_id){
+        const queries = [Query.equal(attribute,user_id)]
+        try{
+            return await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionIdofUsers,
+                queries
+            )
+        } catch(error){
+            console.log("appWrite service:: get users:: error", error);
+            return false
+        }
+    }
+
 }
 
 const db_service = new dbService()

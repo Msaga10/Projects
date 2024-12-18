@@ -1,40 +1,48 @@
-import React from 'react'
+import React from "react";
 import Countdown from "react-countdown";
 
+function Timer({ startDate, endDate }) {
+    const startTime = new Date(startDate).getTime();
+    const endTime = new Date(endDate).getTime();
 
-function Timer({duration}) {
+    // const countdownDate = date.getTime()
+    // console.log(countdownDate);
 
-    
-  
-  // const countdownDate = Date.parse(duration)
+    // const isPastDate = countdownDate < Date.now();
 
-  // const dateString = duration;
-  const date = new Date(duration)
-  const countdownDate = date.getTime()
-  console.log(countdownDate);
-  
-  const isPastDate = countdownDate < Date.now();
+    const renderer = ({ days, hours, minutes, completed }) => {
+        if (completed) {
+            return <span>Time's up</span>;
+        } else {
+            return (
+                <span>
+                    {days} days, {hours} hr, {minutes} min 
+                </span>
+            );
+        }
+    };
 
-  const renderer = ({ days, hours, minutes, seconds, completed }) => {
-      if(completed){
-          return <span>Time's up</span>
-      }else{
-          return <span>{days} days, {hours} hours, {minutes} minutes left</span>
-      }
-  }
-  
-    
-    
     return (
-    <div>
-      {isPastDate?(
-        <p>date is passed!</p>
-      ):(
-
-        <Countdown date={countdownDate} renderer={renderer}/>
-      )}
-    </div>
-  )
+        <div>
+            {startTime > Date.now() ? (
+                <div className="text-sm">
+                    <p >Starts on:</p>
+                    <p>{new Date(startDate).toLocaleString('en-GB',{
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit'
+                    })}</p>
+                </div>
+            ) : endTime > Date.now() ? (
+                <div className="text-sm">
+                    <h3>Ends in</h3>
+                    <Countdown date={endTime} renderer={renderer} />
+                </div>
+            ) : (
+                <p>Sold out</p>
+            )}
+        </div>
+    );
 }
 
-export default Timer
+export default Timer;

@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
 import { login } from "../store/authSlice";
+import db_service from "../appwrite/dbConfig";
 
 const USER_REGEX = /[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PSWD_REGEX = /^(?=.*[a-z])(?=.*[A-z])(?=.*[0-9])(?=.*[!@$#]).{8,24}$/;
@@ -87,6 +88,16 @@ const Signup = () => {
         setErrMsg("");
         try {
             const userData = await authService.createAccount(data);
+            console.log(userData);
+            console.log(userData.$id);
+            console.log(userData.userId);
+            const user_id = userData.userId
+            const name = data.name
+            const email = userData.providerUid
+            const createUserData = await db_service.userDetails(user_id,name,email)
+            // return createUserData   
+            console.log(createUserData);
+            
             if (userData) {
                 const userData = await authService.getCurrentUser();
                 if (userData) dispatch(login(userData));
@@ -381,16 +392,6 @@ const Signup = () => {
             )}
         </>
 
-        // <>
-        //     <div
-        //         className="grid h-screen gap-2 bg-center bg-cover "
-        //         style={{ backgroundImage: `url(${bg1})` }}
-        //     >
-        //          <div className="p-4 w-[300px] h-[350px]  border-solid border-1 rounded-lg bg-teal-700/70 border-gray-600 grid h-fit items-center justify-center justify-self-center self-center relative drop-shadow-2xl backdrop-blur-sm">
-        //             <Input/>
-        //          </div>
-        //     </div>
-        // </>
     );
 };
 
