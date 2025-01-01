@@ -145,7 +145,7 @@ function ItemDetailPage() {
 
     return (
         <div className="flex h-screen ">
-            <div className="w-1/2 p-2 bg-red-300">
+            <div className="w-1/2 p-2 bg-white">
                 <img
                     id="mainImg"
                     src={image}
@@ -234,7 +234,7 @@ function ItemDetailPage() {
                 <br />{" "}
                 <div className="flex justify-between">
                     <h2>
-                        <strong>Current Bid Amount</strong>
+                        <strong>Last Bid Amount</strong>
                     </h2>
                     <div>{bidData ? bidData.bid_amount : "No bids yet"}</div>
                 </div>

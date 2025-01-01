@@ -61,6 +61,18 @@ function AddItem({ isOpen, onClose }) {
         return uploadedFileUrls;
     }
 
+    // const convertToIST = (dateString) => {
+    //     const date = new Date(dateString); // Convert input date string to Date object
+        
+    //     // Adjusting for IST (UTC + 5:30)
+    //     const istOffset = 5.5 * 60; // 5 hours 30 minutes in minutes
+    //     const dateInUTC = date.getTime(); // Get UTC time in milliseconds
+        
+    //     const dateInIST = new Date(dateInUTC + istOffset * 60000); // Add IST offset in milliseconds
+        
+    //     return dateInIST; // Return IST date
+    // }
+
     const lotSubmit = async (data) => {
         setErrMsg("");
 
@@ -73,6 +85,13 @@ function AddItem({ isOpen, onClose }) {
                 data.base_amount = parseInt(data.base_amount, 10);
             }
 
+        //     // Convert the start and end date to IST
+        // const startDateIST = convertToIST(data.start_date).toISOString();
+        // const endDateIST = convertToIST(data.end_date).toISOString();
+
+        // // Add IST dates to your data object
+        // data.start_date = startDateIST;
+        // data.end_date = endDateIST;
             const user = await authService.getCurrentUser();
             data.userId = user.$id;
             data.status = "active"
@@ -168,7 +187,7 @@ function AddItem({ isOpen, onClose }) {
                         />
                     </div>
                     <div className="flex gap-2">
-                        <h2>Old:</h2>
+                        <h2>Item Age:</h2>
                         <Input
                             type="number"
                             // min="0"

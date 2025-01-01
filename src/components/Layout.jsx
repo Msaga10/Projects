@@ -26,9 +26,26 @@ function Layout() {
         })
         .finally(()=>setLoading(false))
     },[authStatus])
+    // const [value, setValue] = useState(0)
+    // useEffect(()=>{
+       
+    //     setTimeout(()=>{
+    //         setValue(value => value + 1)
+    //             console.log("hello");
+                
+    //         },3000)
+        
+    // })
 
+    // let color = "blue"
+    // const decVal = () => {
+    //     setValue(value - 1)
+    // }
     return !loading ? (
-        <div>
+        <div className="">
+            {/* <h1>Counter:{value}</h1> */}
+            {/* <button onClick={incVal}>+1</button> */}
+            {/* <button onClick={decVal}>-1</button> */}
             <Header />
             <Outlet />
             

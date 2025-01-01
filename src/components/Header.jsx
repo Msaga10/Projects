@@ -22,7 +22,9 @@ function Header() {
         },
     ];
     return (
-        <div className="flex h-auto gap-2 p-2 bg-dark-blue">
+        <div className="flex h-auto gap-2 p-2 bg-dark-blue"
+        // fixed top-0 left-0 w-full z-10
+        >
             <NavLink to="/">
                 <img src={Logo1} alt="Logo" className="h-10 rounded-full " />
             </NavLink>

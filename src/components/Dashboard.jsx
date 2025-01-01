@@ -16,6 +16,8 @@ function Dashboard() {
 
     const [isAddItemOpen,setIsAddItemOpen] = useState(false)
     const [lots, setLots] = useState([])
+    const [lotId, setLotId] = useState([])
+    const [amount, setAmount] = useState([])
 
     const openAddItem = () => setIsAddItemOpen(true)
     const closeAddItem = () => setIsAddItemOpen(false)
@@ -27,6 +29,16 @@ function Dashboard() {
         
         try{
             const response = await db_service.getLots("userId",userId)
+            const documents = response.documents
+            if(Array.isArray(documents) && documents.length > 0){
+                const list = []
+                documents.forEach(doc => {
+                    list.push(doc.$id)
+                    console.log(doc.$id);
+                    
+                })
+                setLotId(list)
+            }
             return response
         }catch(error){
             console.error(error);
@@ -38,14 +50,42 @@ function Dashboard() {
         const result = await list()
         if (result && Array.isArray(result.documents)) {
             setLots(result.documents)
+            console.log(result.documents);
+            
         } else {
             console.error("Unexpected result structure:", result);
         }
     }
     
-    useEffect(()=>{
-        getLots();
-    },[])
+    const currentBid = async () => {
+        const abc  = []
+        for(let i = 0; i < lotId.length; i++){
+            const response = await db_service.getBids("lot_id",lotId[i])
+            if(response.documents && response.documents.length > 0){
+                const lastBid  = response.documents[response.documents.length - 1]
+                console.log(i, lastBid.bid_amount);
+                
+                abc.push(lastBid.bid_amount)
+            }else {
+                abc.push(null);
+            }
+        }
+        setAmount(abc)
+    }
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            await getLots();  
+        };
+    
+        fetchData();
+    }, []);  
+    
+    useEffect(() => {
+        if (lotId.length > 0) {
+            currentBid();  
+        }
+    }, [lotId]); 
     
     return (
         <div className="h-screen bg-light-blue">
@@ -82,7 +122,7 @@ function Dashboard() {
                                     Auction ends on
                                 </th>
                                 <th className="px-4 py-2 text-left">
-                                    Current Price
+                                    Last Bid
                                 </th>
                                 <th className="px-4 py-2 text-left">
                                     Status
@@ -91,15 +131,15 @@ function Dashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            {lots.map((lot)=>(
+                            {lots.map((lot,index)=>(
                             <tr className="" key={lot.old}>
                                 <td className="px-4 py-2">{lot.item_name}</td>
                                 <td className="px-4 py-2">{lot.base_amount}</td>
                                 <td className="px-4 py-2">{new Date(lot.$createdAt).toLocaleDateString()}</td>
                                 <td className="px-4 py-2">{new Date(lot.start_date).toLocaleDateString()}</td>
                                 <td className="px-4 py-2">{new Date(lot.end_date).toLocaleDateString()}</td>
-                                <td className="px-4 py-2">N/A</td>
-                                <td className="px-4 py-2">N/A</td>
+                                <td className="px-4 py-2">{amount[index] != null ? `${amount[index]}` : `N/A`}</td>
+                                <td className="px-4 py-2">{amount[index] && new Date(lot.end_date).getTime() > Date.now() ? `Active` : `Inactive`}</td>
                             </tr>
                             ))}
                         

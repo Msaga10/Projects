@@ -1,30 +1,58 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-function FilterItems() {
+function FilterItems({ onFilterChange }) {
+  const [categories, setCategories] = useState([])
+  const [years, setYears] = useState([])
+
+  const handleCategoryChange = (e) => {
+    const { checked, value} = e.target
+    setCategories(prev => 
+      checked ? [...prev, value] : prev.filter(item => item !== value)
+    )
+  }
+  const handleYearsChange = (e) => {
+    const { checked, value} = e.target
+    setYears(prev => 
+      checked ? [...prev, value] : prev.filter(item => item !== value)
+    )
+  }
+  const handleFilterChange = () => {
+    onFilterChange({categories, years})
+  }
+
   return (
     <div className='h-full p-3 bg-light-blue'>
-      <h2 className='bg-blue-400 text-center'>catagory</h2>
+      <h2 className='bg-blue-400 text-center rounded-tl-lg rounded-tr-lg'>Category</h2>
       <ul >
-        <li><label className='cursor-pointer'><input  type="checkbox" name="" id="" />Electronics</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Home & Garden</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Fashion</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Collectibles</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Automotive</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Sports & Outdoors</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Art & Crafts</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Toys & Games</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Books & Media</label></li>
-        <li><label className='cursor-pointer'><input type="checkbox" name="" id="" />Health & Beauty</label></li>
-      
-      </ul> <br /> <hr />
-      <h2 className='bg-blue-400 text-center'>Old (Year)</h2>
+      {['Electronics', 'Home & Garden', 'Fashion', 'Collectibles', 'Automotive', 'Sports & Outdoors', 'Art & Crafts', 'Toys & Games', 'Books & Media', 'Health & Beauty'].map(category => (
+        <li>
+          <label >
+            <input 
+              type="checkbox" 
+              value={category}
+              onChange={handleCategoryChange}
+            />
+            {category}
+          </label>
+        </li>
+      ))}
+      </ul> <br /> 
+
+      <h2 className='bg-blue-400 text-center rounded-tl-lg rounded-tr-lg'>Old (In year)</h2>
       <ul>
-        <li><input type="checkbox" name="" id="" />1</li>
-        <li><input type="checkbox" name="" id="" />5</li>
-        <li><input type="checkbox" name="" id="" />10</li>
-        <li><input type="checkbox" name="" id="" />50</li>
+        {['<1','<3','<5','<10'].map(year => (
+          <li>
+            <input
+              type="checkbox"
+              value={year}
+              onClick={handleYearsChange}
+            />
+            {year}
+          </li>
+        ))}
       
       </ul>
+      <button onClick={handleFilterChange} className='bg-blue-400 mx-auto m-1 px-1 rounded'>Apply Filters</button>
       
     </div>
   )

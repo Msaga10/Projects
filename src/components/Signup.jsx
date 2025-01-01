@@ -31,40 +31,18 @@ const Signup = () => {
     const [validEmail, setValidEmail] = useState(false);
     const [emailFocus, setEmailFocus] = useState(false);
 
-    const [pwd, setPwd] = useState("");
+    // const [pwd, setPwd] = useState("");
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
 
-    const [matchPwd, setMatchPwd] = useState("");
+    // const [matchPwd, setMatchPwd] = useState("");
     const [validMatch, setValidMatch] = useState(false);
     const [matchFocus, setMatchFocus] = useState(false);
 
     const [errMsg, setErrMsg] = useState("");
     const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        // userRef.current.focus()
-    }, []);
-
-    useEffect(() => {
-        const result = USER_REGEX.test(user);
-        console.log(result);
-        console.log(user);
-        setValidName(result);
-    }, [user]);
-
-    useEffect(() => {
-        const result = PSWD_REGEX.test(pwd);
-        console.log(result);
-        console.log(pwd);
-        setValidPwd(result);
-        const match = pwd === matchPwd;
-        setValidMatch(match);
-    }, [pwd, matchPwd]);
-
-    useEffect(() => {
-        setErrMsg("");
-    }, [user, pwd, matchPwd]);
+    
 
     // const handleSubmit = async (e) => {
     //     e.preventDefault();
@@ -82,7 +60,11 @@ const Signup = () => {
     // const [errMsg, setErrMsg] = useState("")
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+
+    const pwd = watch("password");
+    const matchPwd = watch("confirmPwd");
+
 
     const create = async (data) => {
         setErrMsg("");
@@ -107,6 +89,31 @@ const Signup = () => {
             setErrMsg(error.message);
         }
     };
+
+    useEffect(() => {
+        // userRef.current.focus()
+    }, []);
+
+    useEffect(() => {
+        const result = USER_REGEX.test(user);
+        console.log(result);
+        console.log(user);
+        setValidName(result);
+    }, [user]);
+
+    useEffect(() => {
+        const result = PSWD_REGEX.test(pwd);
+        console.log(result);
+        console.log(pwd);
+        setValidPwd(result);
+        const match = pwd === matchPwd;
+        setValidMatch(match);
+    }, [pwd, matchPwd]);
+
+    useEffect(() => {
+        setErrMsg("");
+    }, [user, pwd, matchPwd]);
+    
 
     return (
         <>
@@ -143,6 +150,7 @@ const Signup = () => {
                                 className="flex flex-col gap-4 "
                             >
                                     <div className="flex flex-col">
+                                        {/* User Name */}
                                     <label className="flex gap-2 text-xs">
                                             <strong>User Name</strong>
                                             {validName && (
@@ -186,6 +194,7 @@ const Signup = () => {
                                             required: true,
                                         })}
                                         />
+                                        {errors.name && <p className="text-red-600 text-xs">{errors.name.message}</p>}
                                     </div>
                                     {userFocus && user && !validName && (
                                         <p
@@ -199,7 +208,7 @@ const Signup = () => {
                                         allowed.
                                         </p>
                                     )}
-
+                                {/* Email */}
                                 <div className="flex flex-col">
                                     <label className="text-xs ">
                                         <strong>Email</strong>
@@ -228,26 +237,21 @@ const Signup = () => {
                                         required:true
                                     })}
                                     />
+                                     {errors.email && <p className="text-red-600 text-xs">{errors.email.message}</p>}
                                 </div>
-
+                                    {/* Password */}
                                 <div className="flex flex-col">
                                     <label className="text-xs ">
                                         <strong>Password</strong>
-
-                                        {validPwd && (
-                                            <span>
-                                                <FontAwesomeIcon
-                                                    icon={faCheck}
-                                                />
-                                            </span>
-                                        )}
-                                        {!(validPwd || !pwd) && (
-                                            <span>
-                                                <FontAwesomeIcon
-                                                    icon={faTimes}
-                                                />
-                                            </span>
-                                        )}
+                                        {pwd && (
+                <span>
+                  {pwd.length >= 8 && pwd.match(/[a-zA-Z]/) && pwd.match(/\d/) && pwd.match(/[^a-zA-Z0-9]/) ? (
+                    <FontAwesomeIcon icon={faCheck} />
+                  ) : (
+                    <FontAwesomeIcon icon={faTimes} />
+                  )}
+                </span>
+              )}
                                     </label>
                                     {/* <input
                                         type="password"
@@ -268,10 +272,15 @@ const Signup = () => {
                                     placeholder="Enter Password"
                                     className="p-1 text-black rounded focus:outline-none"
                                     {...register("password",{
-                                        required:true
+                                        required:true,
+                                        minLength: { value: 8, message: "Password must be at least 8 characters" },
+                                        pattern: {
+                                          value: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[^a-zA-Z0-9])/,
+                                          message: "Password must contain letters, numbers, and special characters"
+                                        }
                                     })}
                                     />
-
+                                     {errors.password && <p className="text-white text-xs">{errors.password.message}</p>}
                                     {pwdFocus && !validPwd && (
                                         <p
                                             id="pwdnote"
@@ -298,7 +307,7 @@ const Signup = () => {
                                         </p>
                                     )}
                                 </div>
-
+                                    {/* Confirm Password */}
                                 <div className="flex flex-col">
                                     <label className="text-xs ">
                                         <strong>Confirm Password</strong>{" "}
@@ -333,14 +342,16 @@ const Signup = () => {
                                         onFocus={() => setMatchFocus(true)}
                                         onBlur={() => setMatchFocus(false)}
                                     /> */}
-            {/* <Input
+            <Input
             type="password"
             placeholder="Confirm Password"
             className="p-1 text-black rounded focus:outline-none"
             {...register("confirmPwd",{
-                required:true
+                required:true,
+                validate: value => value === pwd || "Passwords do not match"
             })}
-            /> */}
+            />
+            {errors.confirmPwd && <p className="text-white text-xs">{errors.confirmPwd.message}</p>}
                                     {matchFocus && !validMatch && (
                                         <p
                                             id="confirmnote"
@@ -359,17 +370,7 @@ const Signup = () => {
                                     type="submit"
                                     className={classNames(
                                         "px-2 py-1 text-sm text-white border-solid rounded-lg border-1 ",
-                                        {
-                                            "bg-blue-600": !(
-                                                !email ||
-                                                !validPwd ||
-                                                !validMatch
-                                            ),
-                                            "bg-gray-400 text-gray-600":
-                                                !email ||
-                                                !validPwd ||
-                                                !validMatch,
-                                        }
+                                        { "bg-blue-600": validMatch, "bg-gray-400 text-gray-600": !validMatch }
                                     )}
                                     // disabled={
                                     //     !email || !validPwd || !validMatch
