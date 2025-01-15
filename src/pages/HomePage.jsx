@@ -7,12 +7,10 @@ function HomePage() {
   return (
     // console.log(import.meta.env.VITE_APPWRITE_URL),
     
-    <div className='flex flex-col h-screen'>
+    <div className='flex flex-col'>
         {/* <Header/> */}
         <Hero/>
         {/* <Footer/> */}
-
-    
     </div>
   )
 }

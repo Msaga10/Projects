@@ -14,7 +14,7 @@ function Hero() {
         setFilters(newFilters); 
     };
     return (
-        <main className="flex flex-1 min-h-fit">
+        <main className="flex flex-1 min-h-screen">
             <div className="w-1/4 "
             // sticky top-0 h-screen overflow-y-auto
             >
