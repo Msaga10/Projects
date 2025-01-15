@@ -4,7 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { useDispatch } from "react-redux";
 import authService from "../appwrite/auth";
-import { login,logout } from "../store/authSlice";
+import { login, logout } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -12,29 +12,29 @@ function Layout() {
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const authStatus = useSelector((state)=>state.auth.status)
+    const authStatus = useSelector((state) => state.auth.status)
 
-    useEffect(()=>{
+    useEffect(() => {
         authService.getCurrentUser()
-        .then((userData)=>{
-            if(userData){
-                dispatch(login({userData}))
-            }else{
-                dispatch(logout())
-                navigate("/")
-            }
-        })
-        .finally(()=>setLoading(false))
-    },[authStatus])
+            .then((userData) => {
+                if (userData) {
+                    dispatch(login({ userData }))
+                } else {
+                    dispatch(logout())
+                    navigate("/")
+                }
+            })
+            .finally(() => setLoading(false))
+    }, [authStatus])
     // const [value, setValue] = useState(0)
     // useEffect(()=>{
-       
+
     //     setTimeout(()=>{
     //         setValue(value => value + 1)
     //             console.log("hello");
-                
+
     //         },3000)
-        
+
     // })
 
     // let color = "blue"
@@ -44,12 +44,8 @@ function Layout() {
     return !loading ? (
         <div className="h-full flex flex-col">
             <Header />
-            <div className="flex flex-grow">
-                <Outlet />
-            </div>
-            {/* <div className=""> */}
-                <Footer />
-            {/* </div> */}
+            <Outlet />
+            <Footer />
         </div>
     ) : null;
 }
