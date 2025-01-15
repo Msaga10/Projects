@@ -42,14 +42,14 @@ function Layout() {
     //     setValue(value - 1)
     // }
     return !loading ? (
-        <div className="">
-            {/* <h1>Counter:{value}</h1> */}
-            {/* <button onClick={incVal}>+1</button> */}
-            {/* <button onClick={decVal}>-1</button> */}
+        <div className="h-full flex flex-col">
             <Header />
-            <Outlet />
-            
-            <Footer />
+            <div className="flex flex-grow">
+                <Outlet />
+            </div>
+            {/* <div className=""> */}
+                <Footer />
+            {/* </div> */}
         </div>
     ) : null;
 }

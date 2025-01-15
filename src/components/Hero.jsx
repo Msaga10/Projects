@@ -11,10 +11,10 @@ function Hero() {
     });
 
     const handleFilterChange = (newFilters) => {
-        setFilters(newFilters); // Update filters with new values from FilterItems
+        setFilters(newFilters); 
     };
     return (
-        <div className="flex flex-1">
+        <main className="flex flex-1 min-h-fit">
             <div className="w-1/4 "
             // sticky top-0 h-screen overflow-y-auto
             >
@@ -22,9 +22,8 @@ function Hero() {
             </div>
             <div className="flex w-full gap-4 p-4 bg-primary-blue">
                 <Card filters={filters}/>
-                {/* <Card /> */}
             </div>
-        </div>
+        </main>
     );
 }
 

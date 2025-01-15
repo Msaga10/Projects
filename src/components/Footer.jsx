@@ -2,11 +2,11 @@ import React from 'react'
 
 function Footer() {
   return (
-    <div className='flex justify-around bg-dark-blue h-[50px] px-60'>
-      <div className=''>a</div>
-      <div className=''>b</div>
-      <div className=''>c</div>
-    </div>
+    <footer className='flex justify-around bg-dark-blue min-h-[30px] p-6'>
+      <div className=''>FAQ</div>
+      <div className=''>Terms & Conditions</div>
+      <div className=''>Contact Us</div>
+    </footer>
   )
 }
 

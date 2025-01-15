@@ -22,7 +22,7 @@ function Header() {
         },
     ];
     return (
-        <div className="flex h-auto gap-2 p-2 bg-dark-blue"
+        <header className="flex h-auto gap-2 p-2 bg-dark-blue sticky top-0 z-10"
         // fixed top-0 left-0 w-full z-10
         >
             <NavLink to="/">
@@ -47,7 +47,7 @@ function Header() {
                 {authStatus && <LogoutBtn />}
                 <LogedInUser className="" />
             </div>
-        </div>
+        </header>
     );
 }
 

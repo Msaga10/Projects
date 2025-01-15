@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
 import { addItem } from "../store/lotSlice";
 
-function AddItem({ isOpen, onClose }) {
+function AddItem({ isOpen, onClose,addNewItem }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [errMsg, setErrMsg] = useState("");
@@ -111,6 +111,7 @@ function AddItem({ isOpen, onClose }) {
             const totalChars = uploadedFileUrls.join('').length;
             console.log(totalChars);
             // navigate("/Dashboard")
+            addNewItem({ ...data, id: uniqueId });
             onClose()
             return response;
         } catch (error) {

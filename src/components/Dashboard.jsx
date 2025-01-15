@@ -72,6 +72,10 @@ function Dashboard() {
         }
         setAmount(abc)
     }
+
+    const addNewItem = (newItem) => {
+        setLots((prevLots) => [...prevLots, newItem]);
+    };
     
     useEffect(() => {
         const fetchData = async () => {
@@ -97,7 +101,7 @@ function Dashboard() {
                 <button>My Bids</button>
                 <button>Profile</button>
                 <button onClick={openAddItem} className="px-2 bg-blue-300 rounded">Add Item</button>
-                <AddItem isOpen={isAddItemOpen} onClose={closeAddItem} />    
+                <AddItem isOpen={isAddItemOpen} onClose={closeAddItem} addNewItem={addNewItem} />    
             </div>
             <hr />
             <div>
