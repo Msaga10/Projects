@@ -18,6 +18,9 @@ import Dashboard from "./components/Dashboard.jsx";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import MakeBid from "./components/MakeBid.jsx";
+import FAQ from "./components/FAQ.jsx";
+import TandC from "./components/TandC.jsx";
+import ContactUs from "./components/ContactUs.jsx";
 
 //  M 1
 // const router = createBrowserRouter([
@@ -49,6 +52,9 @@ const router = createBrowserRouter(
                 <Route path="" element={<HomePage />} />
                 <Route path="/ItemDetailPage/:LotId" element={<ItemDetailPage />} />
                 <Route path="/Dashboard" element={<Dashboard/>}/>
+                <Route path="/FAQ" element={<FAQ/>}/>
+                <Route path="/TandC" element={<TandC/>}/>
+                <Route path="/ContactUs" element={<ContactUs/>}/>
             </Route>
             <Route path="/Signup" element={<Signup />} />
             <Route path="/Login" element={<Login />} />

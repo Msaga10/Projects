@@ -101,7 +101,7 @@ const Login = () => {
                                 className="w-[30px] h-[30px] my-auto rounded-full"
                             />
                         </NavLink>
-                        <h1 className="top-0 p-4 my-0 text-3xl ">
+                        <h1 className="top-0 p-4 my-0 text-3xl text-white">
                             <strong>Login</strong>
                         </h1>
                     </div>
@@ -193,7 +193,7 @@ const Login = () => {
                             })}
                         />
 
-                        <span className="text-[12px]">Forgot Password?</span>
+                        <span className="text-[12px] text-white">Forgot Password?</span>
 
                         <button
                             // type="button"
@@ -208,7 +208,7 @@ const Login = () => {
                         >
                             LOGIN
                         </button>
-                        <p className="text-sm">
+                        <p className="text-sm text-white">
                             Don't have account,
                             <NavLink to="/Signup" className="text-blue-400 ">
                                 Sign up

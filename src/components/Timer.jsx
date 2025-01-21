@@ -153,7 +153,7 @@ function Timer({ startDate, endDate }) {
                     <Countdown date={endTime} renderer={renderer} />
                 </div>
             ) : (
-                <p>Sold out</p>
+                <p className="text-white p-1">Sold out</p>
             )}
         </div>
     );

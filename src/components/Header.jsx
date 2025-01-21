@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import LogoutBtn from "./LogoutBtn";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Notification from "./Notification";
 
 function Header() {
     const authStatus = useSelector((state) => state.auth.status);
@@ -38,12 +39,13 @@ function Header() {
                     }
                 >
                     {" "}
-                    <p className=""> Login</p>
+                    <p className="text-white"> Login</p>
                 </NavLink>
             </span>
             )}
 
             <div className="flex items-center justify-center gap-5 my-auto ml-auto me-5">
+                <Notification/>
                 {authStatus && <LogoutBtn />}
                 <LogedInUser className="" />
             </div>

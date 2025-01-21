@@ -49,10 +49,7 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                 console.log(response1);
                 const responseString = JSON.stringify(response1);
                 console.log(responseString);
-                // if(response && response.url){
-
-                    uploadedFileUrls.push(responseString);
-                // }
+                uploadedFileUrls.push(responseString);
                 
             }
         }
@@ -61,17 +58,6 @@ function AddItem({ isOpen, onClose,addNewItem }) {
         return uploadedFileUrls;
     }
 
-    // const convertToIST = (dateString) => {
-    //     const date = new Date(dateString); // Convert input date string to Date object
-        
-    //     // Adjusting for IST (UTC + 5:30)
-    //     const istOffset = 5.5 * 60; // 5 hours 30 minutes in minutes
-    //     const dateInUTC = date.getTime(); // Get UTC time in milliseconds
-        
-    //     const dateInIST = new Date(dateInUTC + istOffset * 60000); // Add IST offset in milliseconds
-        
-    //     return dateInIST; // Return IST date
-    // }
 
     const lotSubmit = async (data) => {
         setErrMsg("");
@@ -85,13 +71,7 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                 data.base_amount = parseInt(data.base_amount, 10);
             }
 
-        //     // Convert the start and end date to IST
-        // const startDateIST = convertToIST(data.start_date).toISOString();
-        // const endDateIST = convertToIST(data.end_date).toISOString();
 
-        // // Add IST dates to your data object
-        // data.start_date = startDateIST;
-        // data.end_date = endDateIST;
             const user = await authService.getCurrentUser();
             data.userId = user.$id;
             data.status = "active"
@@ -127,7 +107,7 @@ function AddItem({ isOpen, onClose,addNewItem }) {
     return (
         <div>
             <div className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm"></div>
-            <div className="fixed z-50 w-1/3 p-5 mx-auto my-auto bg-gradient-to-r from-red-400 to-blue-400  text-black rounded-lg shadow-lg inset-1/4 h-min">
+            <div className="fixed z-50 w-auto sm:w-1/3 p-5 mx-auto my-auto bg-gradient-to-r from-red-400 to-blue-400  text-black rounded-lg shadow-lg inset-1/4 h-min">
                 <form
                     onSubmit={handleSubmit(lotSubmit)}
                     className="flex flex-col gap-2 "
@@ -179,7 +159,7 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                         className="p-1 rounded"
                         {...register("description", { required: true })}
                     ></textarea>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                         <h2>Purchased on*: </h2>
                         <Input
                             type="date"

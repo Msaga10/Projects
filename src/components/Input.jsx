@@ -17,7 +17,7 @@ const Input = React.forwardRef(function Input({
         <div className="flex flex-col">
           {label && <label
             htmlFor={id}
-            className="text-xs">
+            className="text-xs text-white">
                 {label}
             </label>}  
             <input 

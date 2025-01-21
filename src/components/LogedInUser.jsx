@@ -31,7 +31,7 @@ function LogedInUser() {
                 alt="profile"
                 className="h-5 m-1 rounded-full border-[1px] border-white p-[1px]"
             />
-            {authStatus ? <p>{userName}</p> : <p>Guest</p>}
+            {authStatus ? <p>{userName}</p> : <p className="text-white">Guest</p>}
     </NavLink>
     );
 }

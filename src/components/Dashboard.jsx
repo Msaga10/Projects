@@ -105,8 +105,8 @@ function Dashboard() {
             </div>
             <hr />
             <div>
-                <div className="p-4">
-                    <table className="min-w-full ">
+                <div className="p-4 flow-x-auto">
+                    <table className="min-w-full hidden md:block">
                         <thead>
                             <tr className="">
                                 <th className="px-4 py-2 text-left">
@@ -149,6 +149,19 @@ function Dashboard() {
                         
                         </tbody>
                     </table>
+                    <div className="block md:hidden">
+        {lots.map((lot, index) => (
+            <div key={lot.old} className="bg-amber-100 p-4 rounded-md shadow mb-4">
+                <h3 className="font-semibold">{lot.item_name}</h3>
+                <p><strong>Base Price:</strong> {lot.base_amount}</p>
+                <p><strong>Added On:</strong> {new Date(lot.$createdAt).toLocaleDateString()}</p>
+                <p><strong>Auction Start:</strong> {new Date(lot.start_date).toLocaleDateString()}</p>
+                <p><strong>Auction Ends:</strong> {new Date(lot.end_date).toLocaleDateString()}</p>
+                <p><strong>Last Bid:</strong> {amount[index] != null ? `${amount[index]}` : `N/A`}</p>
+                <p><strong>Status:</strong> {amount[index] && new Date(lot.end_date).getTime() > Date.now() ? `Active` : `Inactive`}</p>
+            </div>
+        ))}
+    </div>
                 </div>
             </div>
             

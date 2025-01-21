@@ -15,7 +15,7 @@ function Hero() {
     };
     return (
         <main className="flex flex-1 min-h-screen">
-            <div className="w-1/4 "
+            <div className="hidden sm:block sm:w-1/4 "
             // sticky top-0 h-screen overflow-y-auto
             >
                 <FilterItems onFilterChange={handleFilterChange}/>
