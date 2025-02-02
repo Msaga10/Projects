@@ -140,7 +140,7 @@ const Signup = () => {
                                         className="w-[30px] h-[30px]  rounded-full"
                                     />
                                 </NavLink>
-                                <h1 className="top-0 p-4 my-0 text-3xl ">
+                                <h1 className="top-0 p-4 my-0 text-3xl text-white">
                                     <strong>Sign Up</strong>
                                 </h1>
                             </div>
@@ -151,7 +151,7 @@ const Signup = () => {
                             >
                                     <div className="flex flex-col">
                                         {/* User Name */}
-                                    <label className="flex gap-2 text-xs">
+                                    <label className="flex gap-2 text-white text-xs">
                                             <strong>User Name</strong>
                                             {validName && (
                                                 <span>
@@ -189,7 +189,7 @@ const Signup = () => {
                                         // label="name"
                                         type="text"
                                         placeholder="Enter Name"
-                                        className="p-1 text-black rounded focus:outline-none"
+                                        className="p-1 text-white rounded focus:outline-none"
                                         {...register("name", {
                                             required: true,
                                         })}
@@ -210,7 +210,7 @@ const Signup = () => {
                                     )}
                                 {/* Email */}
                                 <div className="flex flex-col">
-                                    <label className="text-xs ">
+                                    <label className="text-xs text-white">
                                         <strong>Email</strong>
                                     </label>
                                     {/* <input
@@ -241,7 +241,7 @@ const Signup = () => {
                                 </div>
                                     {/* Password */}
                                 <div className="flex flex-col">
-                                    <label className="text-xs ">
+                                    <label className="text-xs text-white">
                                         <strong>Password</strong>
                                         {pwd && (
                 <span>
@@ -309,7 +309,7 @@ const Signup = () => {
                                 </div>
                                     {/* Confirm Password */}
                                 <div className="flex flex-col">
-                                    <label className="text-xs ">
+                                    <label className="text-xs text-white">
                                         <strong>Confirm Password</strong>{" "}
                                         {validMatch && matchPwd && (
                                             <span>
@@ -381,7 +381,7 @@ const Signup = () => {
                                     CREATE ACCOUNT
                                 </button>
                             </form>
-                            <p className="p-1 text-sm">
+                            <p className="p-1 text-sm text-white">
                                 Already Registered?
                                 <span className="text-blue-400">
                                     <NavLink to="/Login">Sign In</NavLink>

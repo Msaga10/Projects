@@ -24,51 +24,40 @@ function MakeBid({isOpen, onClose}){
         if (data.bid_amount) {
             data.bid_amount = parseInt(data.bid_amount, 10);
         }
-        
+        let lastBid = null;
         try {
             const response = await db_service.getBids("lot_id", LotId);
             if (response.documents && response.documents.length > 0) {
-                const lastBid = response.documents[response.documents.length - 1];  
-                setBidData(lastBid);
-            } else {
-                setBidData(null);  
-            }
+                lastBid = response.documents[response.documents.length - 1];  
+                
+            } 
         } catch (error) {
             console.error('Error fetching bid data:', error);
         }
         setTimeout(()=>{
             console.log(bidData);
         },4000)
-        let response
-        if(bidData.bid_amount < data.bid_amount){
-            const id9 = userData.$id
-        const time  = Date.now()
-        // console.log(time);
-        // console.log(data.bid_amount);
-        
-        const abc = await db_service.getBids("lot_id",LotId)
-        let lastBidId = null
-        if (abc.documents && abc.documents.length > 0) {
-            const lastBid = abc.documents[abc.documents.length - 1];
-            lastBidId = lastBid.$id
-        }
-        
-        data.bid_time = new Date(time).toISOString()
-        data.user_id = id9
-        data.status = "pending"
-        data.previous_bid_id = lastBidId || null
-        response = await db_service.createBid(data)
-        dispatch(addBid(response))
-        }else{
-            alert("Amount should be greater then last bid!")
-        }
 
-        
-        // console.log(response);
-        onClose()
-        return response   
-    }
+        if (lastBid && lastBid.bid_amount >= data.bid_amount) {
+            alert("Amount should be greater than the last bid!");
+            return;
+        }
+        const id9 = userData.$id;
+        const time = Date.now();
 
+        let lastBidId = lastBid ? lastBid.$id : null;
+
+        data.bid_time = new Date(time).toISOString();
+        data.user_id = id9;
+        data.status = "pending";
+        data.previous_bid_id = lastBidId || null;
+
+        // Create the bid
+        const response = await db_service.createBid(data);
+        dispatch(addBid(response));
+        onClose();
+        return response;
+    };
 
     if (!isOpen) {
         return null;
