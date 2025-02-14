@@ -18,6 +18,8 @@ function Dashboard() {
     const dispatch = useDispatch()
     const statuses = useSelector((state) => state.bid.bidStatus);
 
+    console.warn("STATUSES", statuses);
+
     const openAddItem = () => setIsAddItemOpen(true)
     const closeAddItem = () => setIsAddItemOpen(false)
 

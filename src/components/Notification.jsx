@@ -1,24 +1,27 @@
-import notificationImg from "../assets/notification-24.png"
+import notificationImg from "../assets/notification-24.png";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 function Notification() {
     const statuses = useSelector((state) => state.bid.bidStatus);
-    console.log("notifiaction status:", statuses)
+    console.log("Notification status:", statuses);
     const [delayedStatuses, setDelayedStatuses] = useState([]);
-    
+
     useEffect(() => {
-        if (statuses && statuses.length > 0) {
+        console.log("Current statuses:", statuses); // Log current statuses
+        if (statuses && Array.isArray(statuses) && statuses.length > 0) {
             const timer = setTimeout(() => {
                 setDelayedStatuses(statuses); // Set the statuses after a delay
-            }, 9000); // Delay in milliseconds (2000ms = 2 seconds)
+            }, 500); // Delay in milliseconds (9000ms = 9 seconds)
 
             return () => clearTimeout(timer); // Cleanup the timer when component unmounts or changes
         }
     }, [statuses]); // Trigger this effect when 'statuses' change
 
-    if (!delayedStatuses || delayedStatuses.length === 0) return null;
-    return(
+    if (!Array.isArray(delayedStatuses) || delayedStatuses.length === 0)
+        return null;
+
+    return (
         <div>
             {delayedStatuses.map((statusObj, index) => (
                 <div key={index}>
@@ -44,6 +47,7 @@ function Notification() {
                 </div>
             ))}
         </div>
-    )
+    );
 }
-export default Notification
+
+export default Notification;

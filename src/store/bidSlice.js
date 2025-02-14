@@ -4,8 +4,8 @@ const initialState = {
     bids: [],
     loading: false,
     error: null,
-    bidStatus:[],
-    winnerStatus:[],
+    bidStatus: [],
+    winnerStatus: [],
 };
 
 const bidSlice = createSlice({
@@ -32,9 +32,9 @@ const bidSlice = createSlice({
             state.bids = state.bids.filter(bid => bid.id !== action.payload.id);
         },
         setBidStatus: (state, action) => {
-            const { lotId, status } = action.payload;
-            state.bidStatus.push({lotId, status})  // Set bid status (e.g., "outbid", "win", "lose")
-            console.log("from bidslice:",action.payload)
+            // const { lotId, status } = action.payload;
+            state.bidStatus = action.payload  // Set bid status (e.g., "outbid", "win", "lose")
+            console.log("from bidslice:", action.payload)
         },
         clearBidStatus: (state) => {
             state.bidStatus = [];  // Clear bid status
