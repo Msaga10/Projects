@@ -21,7 +21,6 @@ function ItemDetailPage() {
     const dispatch = useDispatch();
 
     const { LotId } = useParams();
-    // console.log(LotId);
 
     const updateImage = (e) => {
         setImage(e);
@@ -50,7 +49,6 @@ function ItemDetailPage() {
             console.error("Error fetching bid data:", error);
         }
     };
-    // console.log(bidData?.user_id);
 
     const url = [];
     const getImageUrl = async () => {
@@ -82,13 +80,23 @@ function ItemDetailPage() {
     const closeAddItem = () => setIsAddItemOpen(false);
     const [isDisabled, setIsDisabled] = useState(false);
 
+    const adjustEndDateToLastMoment = (endDateString) => {
+        const date = new Date(endDateString);
+    
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+    
+        return date.getTime(); 
+    };
+
     const openAddItem = async () => {
         const userDetails = await authService.getCurrentUser();
-        // console.log(userDetails);
+        
         if (userDetails) {
             if (
                 Date.now() > new Date(lotData.start_date).getTime() &&
-                Date.now() < new Date(lotData.end_date).getTime()
+                Date.now() < adjustEndDateToLastMoment(lotData.end_date)
             ) {
                 setIsAddItemOpen(true);
                 dispatch(addItem({ lot_Id: LotId, user_Id: userDetails.$id }));
@@ -103,7 +111,7 @@ function ItemDetailPage() {
     };
 
     const winnerName = async () => {
-        if (new Date(lotData.end_date).getTime() <= Date.now()) {
+        if (adjustEndDateToLastMoment(lotData.end_date) <= Date.now()) {
             if (bidData && bidData.user_id) {
                 const abc = bidData.user_id;
                 console.log(abc);
@@ -119,8 +127,6 @@ function ItemDetailPage() {
                     setWinner(winnername.documents[0].name);
                     console.log("Winner:", winnername.documents[0].name);
                 }
-                // console.log(winnername.documents[0].name);
-                // console.log(winnername.documents[0].user_id);
             } else {
                 setWinner("No bids placed");
             }

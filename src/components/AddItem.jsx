@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Input from "./Input";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import db_service from "../appwrite/dbConfig";
 import storage_service from "../appwrite/storageConfig";
@@ -9,7 +8,6 @@ import authService from "../appwrite/auth";
 import { addItem } from "../store/lotSlice";
 
 function AddItem({ isOpen, onClose,addNewItem }) {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [errMsg, setErrMsg] = useState("");
     const { register, handleSubmit } = useForm();
@@ -43,7 +41,6 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                 console.log(files[key]);
                 
                 const response = await storage_service.uploadFile(files[key])
-                // uploadedFileUrls[key] = response
                 console.log(response);
                 const response1 = response.$id
                 console.log(response1);
@@ -79,7 +76,6 @@ function AddItem({ isOpen, onClose,addNewItem }) {
             const uploadedFileUrls = await uploadFiles()
             console.log(uploadedFileUrls);
             
-            // data.imageUrls = uploadedFileUrls
             data.imageUrls = Array.isArray(uploadedFileUrls) ? uploadedFileUrls : [uploadedFileUrls]
             const response = await db_service.createLot(data);
 
@@ -90,7 +86,7 @@ function AddItem({ isOpen, onClose,addNewItem }) {
 
             const totalChars = uploadedFileUrls.join('').length;
             console.log(totalChars);
-            // navigate("/Dashboard")
+    
             addNewItem({ ...data, id: uniqueId });
             onClose()
             return response;
@@ -131,7 +127,6 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                             })}
                         />
                     </div>
-                    {/* <Input type="text" placeholder="Discription" className="h-20" /> */}
                     <select
                         name=""
                         id=""
@@ -177,23 +172,7 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                             className="w-16"
                             {...register("old", { required: true })}
                         />
-                        {/* <Input
-                            type="number"
-                            min="0"
-                            max="11"
-                            step="1"
-                            placeholder="Months"
-                            className="w-16"
-                            {...register("old.months", { required: true })}
-                        /> */}
-                        {/* <Input
-                            type="number"
-                            min="1"
-                            max="30"
-                            placeholder="Days"
-                            className="w-16"
-                            {...register("old.days", { required: true })}
-                        /> */}
+                       
                     </div>
                     <div className="">
                         <div className="flex">
@@ -270,7 +249,6 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                     </div>
                     <button
                         type="submit"
-                        // onClick={onClose}
                         className="bg-blue-400 flex-1 w-fit inline-flex inline-block w-auto rounded text-xl p-1"
                     >
                         <p>Submit</p>

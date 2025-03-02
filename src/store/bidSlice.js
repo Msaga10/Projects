@@ -33,8 +33,8 @@ const bidSlice = createSlice({
         },
         setBidStatus: (state, action) => {
             // const { lotId, status } = action.payload;
-            state.bidStatus = action.payload  // Set bid status (e.g., "outbid", "win", "lose")
-            console.log("from bidslice:", action.payload)
+            state.bidStatus = action.payload 
+            // console.log("from bidslice:", action.payload)
         },
         clearBidStatus: (state) => {
             state.bidStatus = [];  // Clear bid status

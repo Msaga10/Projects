@@ -1,24 +1,19 @@
 import { useForm } from "react-hook-form";
-import authService from "../appwrite/auth";
 import { useSelector } from "react-redux";
 import db_service from "../appwrite/dbConfig";
 import { useDispatch } from "react-redux";
 import { addBid } from "../store/bidSlice";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
 
 function MakeBid({isOpen, onClose}){
 
     const {register, handleSubmit} = useForm()
-    const [bidData, setBidData] = useState(null)
     const userData = useSelector((state)=>state.auth.userData)
     const {LotId} = useParams()
     
     const dispatch = useDispatch()
 
     const submitBid = async (data) => {
-        // console.log(userData);
-        // console.log(LotId);
         
         data.lot_id = LotId
         if (data.bid_amount) {
@@ -34,9 +29,6 @@ function MakeBid({isOpen, onClose}){
         } catch (error) {
             console.error('Error fetching bid data:', error);
         }
-        setTimeout(()=>{
-            console.log(bidData);
-        },4000)
 
         if (lastBid && lastBid.bid_amount >= data.bid_amount) {
             alert("Amount should be greater than the last bid!");
@@ -52,7 +44,6 @@ function MakeBid({isOpen, onClose}){
         data.status = "pending";
         data.previous_bid_id = lastBidId || null;
 
-        // Create the bid
         const response = await db_service.createBid(data);
         dispatch(addBid(response));
         onClose();

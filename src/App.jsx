@@ -9,21 +9,12 @@ import Dashboard from './components/Dashboard'
 import Signup from './components/Signup'
 import { BrowserRouter, Router } from 'react-router-dom'
 import AllRoutes from './components/AllRoutes'
-// import Login from './components/Login'
+import Login from './components/Login'
 
 function App() {
-  // const [count, setCount] = useState(0)
 
   return (
     <>
-      {/* <Signup/> */}
-      {/* <Login/> */}
-      {/* <Test/> */}
-      {/* <Countdown/> */}
-      {/* <ItemDetailPage/> */}
-      {/* <HomePage/> */}
-      {/* <Dashboard/> */}
-      
       <BrowserRouter>
         <AllRoutes/>
       </BrowserRouter>

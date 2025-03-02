@@ -110,24 +110,6 @@ const Login = () => {
                         onSubmit={handleSubmit(login)}
                         className="flex flex-col gap-4 "
                     >
-                        {/* <div className="flex flex-col">
-                            <label htmlFor="email" className="text-xs ">
-                                Email
-                            </label>
-                            <input
-                                type="text"
-                                id="email"
-                                placeholder="Enter Email"
-                                className="p-1 text-black rounded"
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                aria-invalid={validEmail ? "true" : "false"}
-                                aria-describedby="emailnote"
-                                onFocus={() => setEmailFocus(true)}
-                                onBlur={() => setEmailFocus(false)}
-                                {...register("email",{})}
-                            />
-                        </div> */}
                         <Input
                             label={`Email `}
                             type="text"
@@ -137,51 +119,6 @@ const Login = () => {
                                 required: true,
                             })}
                         />
-
-                        {/* <div className="flex flex-col">
-                            <label htmlFor="Password" className="text-xs ">
-                                <strong>Password</strong>
-
-                                {validPwd && (
-                                    <span>
-                                        <FontAwesomeIcon icon={faCheck} />
-                                    </span>
-                                )}
-                                {!(validPwd || !pwd) && (
-                                    <span>
-                                        <FontAwesomeIcon icon={faTimes} />
-                                    </span>
-                                )}
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                placeholder="Password"
-                                className="p-1 text-black rounded"
-                                onChange={(e) => setPwd(e.target.value)}
-                                required
-                                aria-invalid={validPwd ? "true" : "false"}
-                                aria-describedby="pwdnote"
-                                onFocus={() => setPwdFocus(true)}
-                                onBlur={() => setPwdFocus(false)}
-                            />
-                            {pwdFocus && !validPwd && (
-                                <p
-                                    id="pwdnote"
-                                    className="gap-1 p-1 text-[12px] bg-black rounded"
-                                >
-                                    <FontAwesomeIcon icon={faInfoCircle} />
-                                    8-24 characters <br />
-                                    Must have uppercase and lowercase letter, a
-                                    number and a special character <br />
-                                    Allowed characters:
-                                    <span aria-label="exclamation mark">!</span>
-                                    <span aria-label="at symbol">@</span>
-                                    <span aria-label="hashtag">#</span>
-                                    <span aria-label="doller sign">$</span>
-                                </p>
-                            )}
-                        </div> */}
 
                         <Input
                             label="Password"

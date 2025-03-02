@@ -11,7 +11,7 @@ function LogoutBtn(){
         })
     }
     return (
-        <img onClick={logoutHandler} src={Logout} alt="logout" className="h-5 cursor-pointer" />
+        <img onClick={logoutHandler} src={Logout} alt="logout" className="h-5 cursor-pointer" title="Logout"/>
     )
 }
 

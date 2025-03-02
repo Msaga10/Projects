@@ -25,6 +25,7 @@ function LogedInUser() {
         <NavLink
             to={authStatus?"/Dashboard":"/Signup"}
             className="flex items-center justify-center gap-1 px-1 bg-blue-600 rounded-full w-max h-max"
+            title="Dashboard"
         >
             <img
                 src={profile}

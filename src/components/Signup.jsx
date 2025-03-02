@@ -77,7 +77,7 @@ const Signup = () => {
             const name = data.name
             const email = userData.providerUid
             const createUserData = await db_service.userDetails(user_id,name,email)
-            // return createUserData   
+              
             console.log(createUserData);
             
             if (userData) {
@@ -169,22 +169,6 @@ const Signup = () => {
                                                 </span>
                                             )}
                                         </label>
-                                    {/* <input
-                                            type="text"
-                                            id="userName"
-                                            placeholder="Enter Name"
-                                            ref={userRef}
-                                            onChange={(e) =>
-                                                setUser(e.target.value)
-                                            }
-                                            aria-invalid={
-                                                validName ? "false" : "true"
-                                            }
-                                            aria-describedby="udinote"
-                                            onFocus={() => setUserFocus(true)}
-                                            onBlur={() => setUserFocus(false)}
-                                            className="p-1 text-black rounded focus:outline-none"
-                                        /> */}
                                     <Input
                                         // label="name"
                                         type="text"
@@ -213,22 +197,6 @@ const Signup = () => {
                                     <label className="text-xs text-white">
                                         <strong>Email</strong>
                                     </label>
-                                    {/* <input
-                                        type="text"
-                                        id="email"
-                                        placeholder="Enter Email"
-                                        className="p-1 text-black rounded"
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
-                                        required
-                                        aria-invalid={
-                                            validEmail ? "true" : "false"
-                                        }
-                                        aria-describedby="emailnote"
-                                        onFocus={() => setEmailFocus(true)}
-                                        onBlur={() => setEmailFocus(false)}
-                                    /> */}
                                     <Input
                                     type="text"
                                     placeholder="Enter Email"
@@ -253,20 +221,6 @@ const Signup = () => {
                 </span>
               )}
                                     </label>
-                                    {/* <input
-                                        type="password"
-                                        id="password"
-                                        placeholder="Password"
-                                        className="p-1 text-black rounded"
-                                        onChange={(e) => setPwd(e.target.value)}
-                                        required
-                                        aria-invalid={
-                                            validPwd ? "true" : "false"
-                                        }
-                                        aria-describedby="pwdnote"
-                                        onFocus={() => setPwdFocus(true)}
-                                        onBlur={() => setPwdFocus(false)}
-                                    /> */}
                                     <Input
                                     type="password"
                                     placeholder="Enter Password"
@@ -326,22 +280,6 @@ const Signup = () => {
                                             </span>
                                         )}
                                     </label>
-                                    {/* <input
-                                        type="password"
-                                        id="confirm_pwd"
-                                        placeholder="Confirm Password"
-                                        className="p-1 text-black rounded"
-                                        onChange={(e) =>
-                                            setMatchPwd(e.target.value)
-                                        }
-                                        required
-                                        aria-invalid={
-                                            validMatch ? "false" : "true"
-                                        }
-                                        aria-describedby="confirmnote"
-                                        onFocus={() => setMatchFocus(true)}
-                                        onBlur={() => setMatchFocus(false)}
-                                    /> */}
             <Input
             type="password"
             placeholder="Confirm Password"

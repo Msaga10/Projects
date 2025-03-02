@@ -132,6 +132,7 @@ function Card({ filters }) {
                 {imageUrls.map((value, index) => {
                     const user = users[index]; 
                     if (!user) return null;
+                    const bid = bidData[index];
                     return (
                     <NavLink
                         key={users[index].$id}
@@ -161,14 +162,11 @@ function Card({ filters }) {
                                     {bidData[index] ? bidData[index]?.bid_amount : users[index].base_amount}
                                 </div>
                                 <div className="absolute bottom-0 right-0 text-lg bg-blue-500 rounded m-1">
-                                    {new Date(users[index].end_date).getTime() < Date.now() && bidData[index]?.bid_amount 
-                                    ? <span className="bg-gray-600 px-2 rounded">Sold!</span>
-                                    :
                                     <Timer
                                         startDate={users[index].start_date}
                                         endDate={users[index].end_date}
+                                        bidAmount={bid?.bid_amount}
                                     />
-                                    }
                                 </div>
                             </div>
                         </div>

@@ -26,21 +26,6 @@ function Layout() {
             })
             .finally(() => setLoading(false))
     }, [authStatus])
-    // const [value, setValue] = useState(0)
-    // useEffect(()=>{
-
-    //     setTimeout(()=>{
-    //         setValue(value => value + 1)
-    //             console.log("hello");
-
-    //         },3000)
-
-    // })
-
-    // let color = "blue"
-    // const decVal = () => {
-    //     setValue(value - 1)
-    // }
     return !loading ? (
         <div className="h-full flex flex-col">
             <Header />

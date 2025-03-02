@@ -4,27 +4,43 @@ import { useState, useEffect } from "react";
 
 function Notification() {
     const statuses = useSelector((state) => state.bid.bidStatus);
-    console.log("Notification status:", statuses);
-    const [delayedStatuses, setDelayedStatuses] = useState([]);
+    const [imageVisible, setImageVisible] = useState(false);
+
+    const generateStatusesKey = (statuses) => {
+        return Array.isArray(statuses) ? JSON.stringify(statuses) : ""; 
+    };
+
+    const handleClick = () => {
+        alert("An Update! Go to 'my bids' in Dashboard")
+        setImageVisible(false);
+        localStorage.setItem("notificationViewed","true")
+    }
 
     useEffect(() => {
-        console.log("Current statuses:", statuses); // Log current statuses
-        if (statuses && Array.isArray(statuses) && statuses.length > 0) {
-            const timer = setTimeout(() => {
-                setDelayedStatuses(statuses); // Set the statuses after a delay
-            }, 500); // Delay in milliseconds (9000ms = 9 seconds)
-
-            return () => clearTimeout(timer); // Cleanup the timer when component unmounts or changes
+        if (!Array.isArray(statuses) || statuses.length === 0) {
+            setImageVisible(false);
+            return;
         }
-    }, [statuses]); // Trigger this effect when 'statuses' change
+        const viewed = localStorage.getItem("notificationViewed") === "true"
+        const previousStatusesKey = localStorage.getItem("previousStatusesKey");
+        const currentStatusesKey = generateStatusesKey(statuses);
 
-    if (!Array.isArray(delayedStatuses) || delayedStatuses.length === 0)
-        return null;
+        if (currentStatusesKey !== previousStatusesKey && currentStatusesKey !== "") {  
+            localStorage.removeItem("notificationViewed"); 
+            localStorage.setItem("previousStatusesKey", currentStatusesKey);
+            setImageVisible(true);            
+        }else if(viewed){
+            setImageVisible(false);
+        }else{
+            setImageVisible(true);
+        }
+    }, [statuses]); 
+
+    
+    if (!imageVisible) return null;
 
     return (
         <div>
-            {delayedStatuses.map((statusObj, index) => (
-                <div key={index}>
                     <style>
                         {`
                             @keyframes blink {
@@ -38,14 +54,13 @@ function Notification() {
                             .animate-blink {
                                 animation: blink 2s infinite;
                             }
-                        `}
+                        `}                      
                     </style>
+                    {imageVisible && (
                     <div className="animate-blink text-red-500 flex">
-                        <img src={notificationImg} alt="notification_img" />
-                        <p className="break-words">{`"Lot Id:" ${statusObj.lotId} - ${statusObj.status}`}</p>
+                        <img src={notificationImg} alt="notification_img" onClick={handleClick}/>
                     </div>
-                </div>
-            ))}
+                    )}
         </div>
     );
 }

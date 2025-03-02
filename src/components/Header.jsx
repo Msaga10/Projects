@@ -17,6 +17,16 @@ function Header() {
     const [userLotStatus, setUserLotStatus] = useState({});
     const dispatch = useDispatch();
 
+    const adjustEndDateToLastMoment = (endDateString) => {
+        const date = new Date(endDateString);
+    
+        date.setHours(23);
+        date.setMinutes(59);
+        date.setSeconds(59);
+    
+        return date.getTime(); 
+    };
+
     useEffect(() => {
         const checkUserBids = async () => {
             try {
@@ -26,44 +36,50 @@ function Header() {
                 const response = await db_service.getBids("user_id", userId);
                 const bids = response.documents;
                 const bidStatuses = [];
-                console.log("Fetched Bids:", bids);
+                const processedLotIds = new Set();
+                // console.log("Fetched Bids:", bids);
     
                 if (bids.length > 0) {
                     for (let bid of bids) {
                         const lot = await db_service.getLot(bid.lot_id);
-                        const auctionEndDate = new Date(lot.end_date).getTime();
+                        const adjustedEndDate = adjustEndDateToLastMoment(lot.end_date);
+                    const auctionEndDate = adjustedEndDate;
     
                         let status1;
-                        console.log("Checking lot:", lot);
-                        console.log("Auction end date:", auctionEndDate);
-    
                         if (auctionEndDate < Date.now()) {
                             const lotBids = await db_service.getBids("lot_id", bid.lot_id);
                             const highestBid = lotBids.documents.reduce((maxBid, currentBid) =>
                                 currentBid.bid_amount > maxBid.bid_amount ? currentBid : maxBid
                             );
     
-                            console.log("Lot Bids:", lotBids);
-                            console.log("Highest Bid:", highestBid);
-    
                             if (highestBid.user_id === userId) {
                                 status1 = "You have won the auction";
                             } else {
-                                status1 = "You have been outbid";
+                                status1 = "You lose the auction";
                             }
                         } else {
-                            status1 = "Your bid is still active";
+                            const activeBids = await db_service.getBids("lot_id", bid.lot_id);
+                        const highestActiveBid = activeBids.documents.reduce((maxBid, currentBid) =>
+                            currentBid.bid_amount > maxBid.bid_amount ? currentBid : maxBid
+                        );
+                        if (highestActiveBid.user_id === userId) {
+                            continue;
+                        } else {
+                            status1 = "You have been outbid";
+                        }
                         }
     
-                        // Only push the status if it's defined
-                        if (status1) {
-                            console.warn("STATUS: ", status1);
-                            bidStatuses.push({ lotId: bid.lot_id, status: status1 });
+                        if (status1 && !processedLotIds.has(bid.lot_id)) {
+                            // console.warn("STATUS: ", status1);
+                            processedLotIds.add(bid.lot_id);
+                            bidStatuses.push({ Name: lot.item_name, status: status1 });
                         }
                     }
-                    // Log before dispatching
-                    console.log("Bid Statuses before dispatch:", bidStatuses);
-                    dispatch(setBidStatus(bidStatuses));
+                    
+                    if (bidStatuses.length > 0){
+                        // console.log("Bid Statuses before dispatch:", bidStatuses);
+                        dispatch(setBidStatus(bidStatuses));
+                    }
                 } else {
                     console.warn("No bids found for user.");
                 }
@@ -113,7 +129,7 @@ function Header() {
 
             <div className="flex items-center justify-center gap-5 my-auto ml-auto me-5">
                 {authStatus !== undefined && (
-                    <div className="flex">
+                    <div className="flex gap-5">
                         <Notification />
                         <LogoutBtn />
                     </div>
