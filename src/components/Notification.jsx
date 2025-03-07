@@ -1,6 +1,7 @@
 import notificationImg from "../assets/notification-24.png";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 function Notification() {
     const statuses = useSelector((state) => state.bid.bidStatus);
@@ -11,7 +12,8 @@ function Notification() {
     };
 
     const handleClick = () => {
-        alert("An Update! Go to 'my bids' in Dashboard")
+        // alert("An Update! Go to 'my bids' in Dashboard")
+        toast.info("An Update! Go to 'my bids' in Dashboard")
         setImageVisible(false);
         localStorage.setItem("notificationViewed","true")
     }

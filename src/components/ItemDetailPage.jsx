@@ -1,3 +1,4 @@
+//checkpoint
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import db_service from "../appwrite/dbConfig";
@@ -150,8 +151,8 @@ function ItemDetailPage() {
     }, [lotData, bidData]);
 
     return (
-        <div className="flex h-screen ">
-            <div className="w-1/2 p-2 bg-white">
+        <div className="md:flex flex-1 h-screen ">
+            <div className="md:w-1/2 p-2 bg-white">
                 <img
                     id="mainImg"
                     src={image}
@@ -172,7 +173,7 @@ function ItemDetailPage() {
                     ))}
                 </div>
             </div>
-            <div className="flex-1 px-10 text-black bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+            <div className="flex-1 px-10 py-5 text-black bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
                 <h2>
                     <strong>
                         Item Name: {lotData ? lotData.item_name : "Loading..."}

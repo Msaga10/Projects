@@ -53,7 +53,7 @@ function Header() {
                             );
     
                             if (highestBid.user_id === userId) {
-                                status1 = "You have won the auction";
+                                status1 = "You have won the auction 🏆";
                             } else {
                                 status1 = "You lose the auction";
                             }
@@ -72,7 +72,9 @@ function Header() {
                         if (status1 && !processedLotIds.has(bid.lot_id)) {
                             // console.warn("STATUS: ", status1);
                             processedLotIds.add(bid.lot_id);
-                            bidStatuses.push({ Name: lot.item_name, status: status1 });
+                            bidStatuses.push({lotid: bid.lot_id, userId: bid.user_id, Name: lot.item_name, status: status1 });
+                            console.log(bid.lot_id,lot.item_name,status1);
+                            
                         }
                     }
                     

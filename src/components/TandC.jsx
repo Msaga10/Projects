@@ -2,8 +2,8 @@ import React from 'react';
 
 function TandC() {
     return(
-        <div className='p-2'>
-            <h1>Terms and Conditions</h1>
+        <div className='p-2 bg-amber-200'>
+            <h1 className='text-xl font-bold'>Terms and Conditions</h1>
             <p>Effective Date: [Insert Date]</p>
 
             <p>By accessing and using this website (the "Site"), you agree to comply with and be bound by the following Terms and Conditions. Please read them carefully before using the Site. If you do not agree to these Terms, do not use the Site.</p>
