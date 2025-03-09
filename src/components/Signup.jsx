@@ -173,7 +173,7 @@ const Signup = () => {
                                         // label="name"
                                         type="text"
                                         placeholder="Enter Name"
-                                        className="p-1 text-white rounded focus:outline-none"
+                                        className="p-1 rounded focus:outline-none"
                                         {...register("name", {
                                             required: true,
                                         })}
