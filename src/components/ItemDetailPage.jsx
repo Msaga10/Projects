@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import MakeBid from "./MakeBid";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../store/lotSlice";
+import { toast } from "react-toastify";
 
 function ItemDetailPage() {
     const [userData, setUserData] = useState(null);
@@ -103,10 +104,12 @@ function ItemDetailPage() {
                 dispatch(addItem({ lot_Id: LotId, user_Id: userDetails.$id }));
             } else {
                 setIsDisabled(true);
-                alert("Auction is not Live!");
+                // alert("Auction is not Live!");
+                toast.error("Auction is not Live!")
             }
         } else {
-            alert("Please Login!");
+            // alert("Please Login!");
+            toast.error("Please Login!")
             setIsDisabled(true);
         }
     };

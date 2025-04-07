@@ -4,6 +4,7 @@ import db_service from "../appwrite/dbConfig";
 import { useDispatch } from "react-redux";
 import { addBid } from "../store/bidSlice";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function MakeBid({isOpen, onClose}){
 
@@ -31,7 +32,10 @@ function MakeBid({isOpen, onClose}){
         }
 
         if (lastBid && lastBid.bid_amount >= data.bid_amount) {
-            alert("Amount should be greater than the last bid!");
+            // alert("Amount should be greater than the last bid!");
+            // const notify = () => {
+                toast.error("Amount should be greater than the last bid!")
+            // }
             return;
         }
         const id9 = userData.$id;
@@ -60,7 +64,7 @@ function MakeBid({isOpen, onClose}){
         <div className="fixed z-50 w-1/3 p-5 mx-auto my-auto bg-gradient-to-r from-red-400 to-blue-400  text-black rounded-lg shadow-lg inset-1/4 h-min">
             <h1>Make Your Bid</h1>
             <form action="" onSubmit={handleSubmit(submitBid)} >
-                <input type="number" step="1" placeholder="Enter Bid Amount" className="rounded p-1" {...register("bid_amount", {required: true,})}/>
+                <input type="number" step="1" placeholder="Enter Bid Amount" className="rounded p-1 w-1/2" {...register("bid_amount", {required: true,})}/>
                 <button type="submit" className="mx-2 bg-blue-300 px-1 rounded">Bid!</button>
             </form>
         <button onClick={onClose} className="absolute top-0 right-0 px-1 m-2 bg-red-600">X</button>

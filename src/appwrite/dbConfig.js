@@ -1,5 +1,6 @@
 import conf from "../conf/conf";
 import { Client, ID, Databases, Storage, Query} from "appwrite"
+import CryptoJS from "crypto-js";
 
 
 export class dbService{
@@ -187,6 +188,141 @@ export class dbService{
         }
     }
 
+
+    //////////////////// Token //////////////////////
+    async upsertFCMToken(userId, sessionId, token) {
+        console.log("token data:",token);
+        
+        try {
+            // const existingTokens = await this.getUserTokens(userId);
+            // const tokenObject = existingTokens ? JSON.parse(existingTokens) : {}
+            // tokenObject[sessionId] = token
+            // const tokensString = JSON.stringify(tokenObject)
+
+            // if (existingTokens) {
+            //     // console.log(conf.appwriteDatabaseId);
+            //     // console.log(conf.appwriteCollectionIdofTokens);
+                
+            //     // // Update the token for the specific session
+            //     // existingTokens[sessionId] = token;
+            //     return await this.databases.updateDocument(
+            //         conf.appwriteDatabaseId,
+            //         conf.appwriteCollectionIdofTokens,
+            //         userId,
+            //         { token: tokensString, userId: userId, sessionId: sessionId }
+            //     );
+            // } else {
+            //     // Create a new document with the token
+            //     return await this.databases.createDocument(
+            //         conf.appwriteDatabaseId,
+            //         conf.appwriteCollectionIdofTokens,
+            //         userId,
+            //         { token: tokensString , userId: userId, sessionId: sessionId }
+            //     );
+            // }
+
+
+function generateDocumentId(userId, sessionId) {
+    const combined = `${userId}-${sessionId}`;
+
+    const hash = CryptoJS.SHA256(combined).toString(CryptoJS.enc.Hex);
+
+    return hash.substring(0, 36);  
+}
+            const documentId = generateDocumentId(userId,sessionId)
+            console.log(documentId);
+            
+        
+            try {
+                // Check if document exists
+                await this.databases.getDocument(
+                    conf.appwriteDatabaseId,
+                    conf.appwriteCollectionIdofTokens,
+                    documentId
+                );
+                
+                // Update existing document
+                return await this.databases.updateDocument(
+                    conf.appwriteDatabaseId,
+                    conf.appwriteCollectionIdofTokens,
+                    documentId,
+                    { 
+                        userId: userId,
+                        sessionId: sessionId,
+                        token: token  // Store just one token per document
+                    }
+                );
+            } catch (error) {
+                // Create new document
+                return await this.databases.createDocument(
+                    conf.appwriteDatabaseId,
+                    conf.appwriteCollectionIdofTokens,
+                    documentId,
+                    { 
+                        userId: userId,
+                        sessionId: sessionId,
+                        token: token  // Store just one token per document
+                    }
+                );
+            }
+        } catch (error) {
+            console.error("appWrite service:: upsert FCM token:: error", error);
+        }
+    }
+
+    async getUserTokens(userId) {
+        try {
+            // const document = await this.databases.getDocument(
+            //     conf.appwriteDatabaseId,
+            //     conf.appwriteCollectionIdofTokens,
+            //     userId
+            // );
+            // return document?.token || null;
+
+            const response = await this.databases.listDocuments(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionIdofTokens,
+                [
+                    Query.equal('userId', userId)
+                ]
+            );
+            
+            const result = {};
+            for (const doc of response.documents) {
+                result[doc.sessionId] = doc.token;
+            }
+            return Object.keys(result).length > 0 ? result : null;
+        } catch (error) {
+            console.error("appWrite service:: get user tokens:: error", error);
+            return null;
+        }
+    }
+
+    async deleteFCMToken(userId, sessionId) {
+        try {
+            // const existingTokens = await this.getUserTokens(userId);
+            // if (existingTokens && existingTokens[sessionId]) {
+            //     delete existingTokens[sessionId];
+            //     return await this.databases.updateDocument(
+            //         conf.appwriteDatabaseId,
+            //         conf.appwriteCollectionIdofTokens,
+            //         userId,
+            //         { token: existingTokens }
+            //     );
+            // }
+
+            const documentId = `${userId}-${sessionId}`;
+        
+            // Delete the specific document for this session
+            return await this.databases.deleteDocument(
+                conf.appwriteDatabaseId,
+                conf.appwriteCollectionIdofTokens,
+                documentId
+            );
+        } catch (error) {
+            console.error("appWrite service:: delete FCM token:: error", error);
+        }
+    }
 }
 
 const db_service = new dbService()

@@ -7,9 +7,10 @@ import { useForm } from "react-hook-form";
 import authService from "../appwrite/auth";
 import { addItem } from "../store/lotSlice";
 
-function AddItem({ isOpen, onClose,addNewItem }) {
+function AddItem({ isOpen, onClose, addNewItem }) {
     const dispatch = useDispatch();
     const [errMsg, setErrMsg] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false); // Add loading state
     const { register, handleSubmit } = useForm();
     const [files, setFiles] = useState({
         img1: null,
@@ -23,44 +24,38 @@ function AddItem({ isOpen, onClose,addNewItem }) {
     });
 
     const handleImage = (e, key) => {
-        console.log(key);
         const file = e.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setImgPreview((prev) => ({ ...prev, [key]: imageUrl }));
             setFiles((prev) => ({...prev, [key]:file}))
-        } else {
-            console.log("error", key);
         }
     };
 
     const uploadFiles = async() => {
         const uploadedFileUrls = []
-        for(const key in files){
-            if(files[key]){
-                console.log(files[key]);
-                
-                const response = await storage_service.uploadFile(files[key])
-                console.log(response);
-                const response1 = response.$id
-                console.log(response1);
-                const responseString = JSON.stringify(response1);
-                console.log(responseString);
-                uploadedFileUrls.push(responseString);
-                
+        try {
+            for(const key in files){
+                if(files[key]){
+                    const response = await storage_service.uploadFile(files[key])
+                    const response1 = response.$id
+                    const responseString = JSON.stringify(response1);
+                    uploadedFileUrls.push(responseString);
+                }
             }
+            return uploadedFileUrls;
+        } catch (error) {
+            console.error("Error uploading files:", error);
+            throw error; // Re-throw to be caught by the parent function
         }
-        console.log(uploadedFileUrls);
-        
-        return uploadedFileUrls;
     }
-
 
     const lotSubmit = async (data) => {
         setErrMsg("");
-
+        setIsSubmitting(true); // Start loading state
+        
         try {
-            // console.log(data);
+            // Parse numeric fields
             if (data.old) {
                 data.old = parseInt(data.old, 10);
             }
@@ -68,31 +63,33 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                 data.base_amount = parseInt(data.base_amount, 10);
             }
 
-
             const user = await authService.getCurrentUser();
             data.userId = user.$id;
             data.status = "active"
 
-            const uploadedFileUrls = await uploadFiles()
-            console.log(uploadedFileUrls);
+            const uploadedFileUrls = await uploadFiles();
+            data.imageUrls = Array.isArray(uploadedFileUrls) ? uploadedFileUrls : [uploadedFileUrls];
             
-            data.imageUrls = Array.isArray(uploadedFileUrls) ? uploadedFileUrls : [uploadedFileUrls]
             const response = await db_service.createLot(data);
-
-            const uniqueId = response.$id
-            console.log(uniqueId);
+            const uniqueId = response.$id;
             
             dispatch(addItem({ ...data, id: uniqueId }));
-
-            const totalChars = uploadedFileUrls.join('').length;
-            console.log(totalChars);
-    
-            addNewItem({ ...data, id: uniqueId });
-            onClose()
+            
+            // Try to add the new item, but don't let errors prevent closing
+            try {
+                addNewItem({ ...data, id: uniqueId });
+            } catch (addItemError) {
+                console.error("Error in addNewItem:", addItemError);
+            }
+            
+            // Always close the modal after submission attempt
             return response;
         } catch (error) {
-            setErrMsg(error);
-            console.error(error);
+            setErrMsg(error.message || "Error submitting form");
+            console.error("Form submission error:", error);
+        } finally {
+            setIsSubmitting(false); // End loading state
+            onClose(); // Make sure modal closes regardless of success/failure
         }
     };
     
@@ -103,34 +100,39 @@ function AddItem({ isOpen, onClose,addNewItem }) {
     return (
         <div>
             <div className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm"></div>
-            <div className="fixed z-50 w-auto sm:w-1/3 p-5 mx-auto my-auto bg-gradient-to-r from-red-400 to-blue-400  text-black rounded-lg shadow-lg inset-1/4 h-min">
+            <div className="fixed z-50 w-2/3 sm:w-1/2 p-5 my-auto bg-gradient-to-r from-red-400 to-blue-400 text-white rounded-lg shadow-lg left-1/2 transform -translate-x-1/2 h-min text-lg">
+                {errMsg && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {errMsg}
+                    </div>
+                )}
                 <form
                     onSubmit={handleSubmit(lotSubmit)}
                     className="flex flex-col gap-2 "
                 >
                     <h1 className="text-center">Add Auction Item</h1>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 w-auto">
+                        <div className=" w-1/2">
                         <Input
                             type="text"
                             placeholder="Product Name"
-                            className=" w-full"
                             {...register("item_name", {
                                 required: true,
                             })}
-                        />
+                        /></div>
+                        <div className=" w-1/2">
                         <Input
                             type="text"
                             placeholder="Product Type"
-                            className=" w-full"
                             {...register("item_type", {
                                 required: true,
                             })}
-                        />
+                        /></div>
                     </div>
                     <select
                         name=""
                         id=""
-                        className=" rounded"
+                        className=" rounded text-black"
                         {...register("category", { required: true })}
                     >
                         <option value="category">Category</option>
@@ -151,9 +153,10 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                         name=""
                         id=""
                         placeholder="Item Discription"
-                        className="p-1 rounded"
+                        className="p-1 rounded text-black"
                         {...register("description", { required: true })}
                     ></textarea>
+                    <div className="sm:flex gap-2">
                     <div className="flex gap-2 flex-wrap">
                         <h2>Purchased on*: </h2>
                         <Input
@@ -166,13 +169,13 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                         <h2>Item Age:</h2>
                         <Input
                             type="number"
-                            // min="0"
                             step="1"
                             placeholder="Years"
                             className="w-16"
                             {...register("old", { required: true })}
                         />
                        
+                    </div>
                     </div>
                     <div className="">
                         <div className="flex">
@@ -249,14 +252,16 @@ function AddItem({ isOpen, onClose,addNewItem }) {
                     </div>
                     <button
                         type="submit"
-                        className="bg-blue-400 flex-1 w-fit inline-flex inline-block w-auto rounded text-xl p-1"
+                        className="bg-blue-400 flex-1 w-fit inline-flex inline-block w-auto rounded text-xl p-1 px-1"
+                        disabled={isSubmitting}
                     >
-                        <p>Submit</p>
+                        <p>{isSubmitting ? "Submitting..." : "Submit"}</p>
                     </button>
                 </form>
                 <button
                     onClick={onClose}
                     className="absolute top-0 right-0 px-1 m-2 bg-red-600"
+                    disabled={isSubmitting}
                 >
                     X
                 </button>
