@@ -130,7 +130,7 @@ function Header() {
             )}
 
             <div className="flex items-center justify-center gap-5 my-auto ml-auto me-5">
-                {authStatus !== undefined && (
+                {authStatus  && (
                     <div className="flex gap-5">
                         <Notification />
                         <LogoutBtn />
